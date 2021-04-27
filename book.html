@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript">
+        function editBook(id) {
+            let form = window.document.createElement('form');
+            div.appendChild(form);
+            let input = window.document.createElement('input');
+            input.name = "title";
+        }
+        function loadBook(){
+            let params = (new URL(document.location)).searchParams;
+            let id = params.get("id");
+            var xhttp = new XMLHttpRequest();
+            //on async request:
+            xhttp.onreadystatechange = () =>
+            {
+                if (xhttp.readyState == 4 && xhttp.status == 200){
+                    const body = xhttp.response;
+                    window.document.title = "Book";
+                    var div = window.document.getElementById('book');
+                    var p1 = window.document.createElement('p');
+                    p1.innerText = `Título: "${body[0].title}"`;
+                    var p2 = window.document.createElement('p');
+                    p2.innerText = 'Autor: ' + body[0].author;
+                    div.appendChild(p1);
+                    div.appendChild(p2);
+                    var p3 = window.document.createElement('p');
+                    for (j=0; j<body[0].genres.length; j++){
+                        var span = window.document.createElement('span');
+                        span.innerText = body[0].genres[j];
+                        p3.appendChild(span);
+                    }
+                    if (body[0].img) {
+                        var img = window.document.createElement("img");
+                        img.src = `files/${id}`;
+                        div.appendChild(img);
+                    }
+                    let p4 = window.document.createElement('p');
+                    let a = window.document.createElement("a");
+                    a.href = `edit-book.html?id=${id}`;
+                    let button = window.document.createElement('button');
+                    button.innerText = "edit...";
+                    a.appendChild(button);
+                    p4.appendChild(a);
+                    div.appendChild(p4);
+                }
+                else if (xhttp.readyState == 4 && xhttp.status == 404) {
+                    window.document.title = xhttp.statusText;
+                    let div = window.document.getElementById('book');
+                    var h2 = window.document.createElement('h2');
+                    h2.innerText = xhttp.statusText;
+                    div.appendChild(h2);
+                }
+            }
+            xhttp.open('GET', `http://localhost:3000/books/book?id=${id}`, true); //async
+            xhttp.responseType = "json";
+            xhttp.send();
+        }
+        window.onload = loadBook;
+        </script>
+    </head>
+    <body>
+        <div id='book'></div>
+    </body>
+</html>
