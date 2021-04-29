@@ -3,48 +3,92 @@
     <head>
         <meta charset="utf-8">
         <script type="text/javascript">
-        function editBook(id) {
-            let form = window.document.createElement('form');
-            div.appendChild(form);
-            let input = window.document.createElement('input');
-            input.name = "title";
+        
+        var id;
+        var body;
+        var isNew = false;
+        function loadForm(){
+            var input = window.document.getElementById("title");
+            input.value = body[0].title;
+            input = window.document.getElementById("author");
+            input.value = body[0].author;
+            input = window.document.getElementById("cover");
+            input.src = `files/${id}`;
+            input = window.document.getElementById("myfile");
+            var div = window.document.getElementById('book');
+            div.hidden = true;
+            div = window.document.getElementById('edit');
+            div.hidden = false;
+            var form = window.document.getElementById("bookForm");
+            form.addEventListener("submit", (ev) =>
+            {
+                var data = new FormData(form);
+                data.append('id', `${id}`);
+                
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("PUT", `http://localhost:3000/books/book`); //async
+                xhttp.onreadystatechange = function() {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        //console.log("livro adicionado");
+                        let div = window.document.getElementById('edit');
+                        div.hidden = true;
+                        div = window.document.getElementById('book');
+                        div.innerHTML = "";
+                        div.hidden = false;
+                        isNew = true;
+                        loadBook();
+                    }
+                    else if(xhttp.readyState == 4 && xhttp.status == 400) {
+                        //console.log("Erro");
+                        let result = window.document.getElementById("errSpan");
+                        result.innerText = "Erro!";
+                    }
+                    //window.location.href = `book.html?id=${id}`; //redirect
+                };
+                xhttp.send(data);
+                ev.preventDefault();
+            }, false);
         }
         function loadBook(){
-            let params = (new URL(document.location)).searchParams;
-            let id = params.get("id");
+            var params = (new URL(document.location)).searchParams;
+            id = params.get("id");
             var xhttp = new XMLHttpRequest();
             //on async request:
             xhttp.onreadystatechange = () =>
             {
                 if (xhttp.readyState == 4 && xhttp.status == 200){
-                    const body = xhttp.response;
+                    body = xhttp.response;
                     window.document.title = "Book";
-                    var div = window.document.getElementById('book');
-                    var p1 = window.document.createElement('p');
+                    let div = window.document.getElementById('book');
+                    let p1 = window.document.createElement('p');
                     p1.innerText = `Título: "${body[0].title}"`;
-                    var p2 = window.document.createElement('p');
+                    let p2 = window.document.createElement('p');
                     p2.innerText = 'Autor: ' + body[0].author;
                     div.appendChild(p1);
                     div.appendChild(p2);
                     var p3 = window.document.createElement('p');
                     for (j=0; j<body[0].genres.length; j++){
-                        var span = window.document.createElement('span');
+                        let span = window.document.createElement('span');
                         span.innerText = body[0].genres[j];
                         p3.appendChild(span);
                     }
                     if (body[0].img) {
-                        var img = window.document.createElement("img");
+                        let img = window.document.createElement("img");
                         img.src = `files/${id}`;
                         div.appendChild(img);
                     }
                     let p4 = window.document.createElement('p');
-                    let a = window.document.createElement("a");
-                    a.href = `edit-book.html?id=${id}`;
                     let button = window.document.createElement('button');
                     button.innerText = "edit...";
-                    a.appendChild(button);
-                    p4.appendChild(a);
+                    button.onclick= loadForm;
+                    p4.appendChild(button);
                     div.appendChild(p4);
+                    if (isNew) {
+                        let result = window.document.createElement('span');
+                        result.innerText = "Editado!";
+                        p4.appendChild(result);
+                    }
+                    
                 }
                 else if (xhttp.readyState == 4 && xhttp.status == 404) {
                     window.document.title = xhttp.statusText;
@@ -63,5 +107,18 @@
     </head>
     <body>
         <div id='book'></div>
+        <div id="edit" hidden>
+            <form enctype="multipart/form-data" name="formData" id="bookForm">
+                <label>Title:</label>
+                <input type="text" id="title" name="title" required><br>
+                <label>Author:</label>
+                <input type="text" id="author" name="author" required><br>
+                <img id="cover"><br>
+                <label for="myfile">Upload a file:</label>
+                <input type="file" id="myfile" name="myfile">
+                <input type="submit" value="Save"> <span id="errSpan"></span>
+                <input type="button" value="Cancel" onclick="">
+            </form>
+        </div>
     </body>
 </html>
