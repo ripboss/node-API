@@ -2,15 +2,16 @@ const mongoose = require('mongoose');
 
 const BookSchema = new mongoose.Schema({
     title: {
-        type: String
+        type: String,
+        required: 'Title is null'
     },
     author: {
         type: String,
-        required: "Author required"
+        required: 'Author is null'
     },
     genres: {
-        type: Array,
-        default: []
+        type: [String],
+        //default: []
     },
     img: {
         contentType: String,
