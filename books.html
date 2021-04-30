@@ -13,13 +13,16 @@
                         if (body) {
                             var div =window.document.getElementById('books');
                             for (i=0; i<body.length; i++){
-                                var p = window.document.createElement("p");
-                                var a = window.document.createElement("a");
+                                let p = window.document.createElement("p");
+                                let a = window.document.createElement("a");
                                 //a.href = `http://localhost:3000/books/book/${body[i]._id}`;
                                 a.href = `./book.html?id=${body[i]._id}`;
+                                let button = window.document.createElement("button");
+                                button.innerText = "✎"
+                                a.appendChild(button);
+                                let node = document.createTextNode(`"${body[i].title}" by ${body[i].author}`);
+                                p.appendChild(node);
                                 p.appendChild(a);
-                                var node = document.createTextNode(`"${body[i].title}" by ${body[i].author}`);
-                                a.appendChild(node);
                                 div.appendChild(p);
                             }
                         }
