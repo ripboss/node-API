@@ -1,11 +1,12 @@
 function loadBooks(){
     var xhttp = new XMLHttpRequest();
+    //on async request:
     xhttp.onreadystatechange = () =>
     {
         if (xhttp.readyState == 4 && xhttp.status == 200) { //recebeu resposta com OK
             const body = xhttp.response;
             if (body) {
-                var div =window.document.getElementById('books');
+                let div =window.document.getElementById('books');
                 for (i=0; i<body.length; i++){
                     let p = window.document.createElement("p");
                     let a = window.document.createElement("a");
@@ -31,7 +32,6 @@ function loadBooks(){
     //const author = form.formData.author.value;
     form.addEventListener("submit", (ev) =>
     {
-        //form = window. document.querySelector("form");
         var data = new FormData(form);
         //console.log(data.get("myfile").text());
         for (var p of data.entries())

@@ -21,6 +21,7 @@ function loadForm(){
         
         var xhttp = new XMLHttpRequest();
         xhttp.open("PUT", `http://localhost:3000/books/book`); //async
+        //on async request:
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState == 4 && xhttp.status == 200) {
                 //console.log("livro adicionado");
