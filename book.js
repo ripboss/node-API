@@ -9,7 +9,6 @@ function loadForm(){
     input.value = body[0].author;
     input = window.document.getElementById("newcover");
     input.src = `files/${id}`;
-    //input = window.document.getElementById("newfile");
     var div = window.document.getElementById('book');
     div.hidden = true;
     div = window.document.getElementById('edit');
