@@ -1,6 +1,6 @@
 var id;
 var body;
-var isNew = false;
+// var isNew = false;
 
 function loadForm(){
     var input = window.document.getElementById("newtitle");
@@ -74,12 +74,12 @@ function loadBook(){
                 img.src = `files/${id}`;
 
             }
-            if (isNew) {
-                let p = window.document.getElementById('bottom');
-                let result = window.document.createElement('span');
-                result.innerText = "Editado!";
-                p.appendChild(result);
-            }
+            // if (isNew) {
+            //     let p = window.document.getElementById('bottom');
+            //     let result = window.document.createElement('span');
+            //     result.innerText = "Editado!";
+            //     p.appendChild(result);
+            // }
         }
         else if (xhttp.readyState == 4 && xhttp.status == 404) {
             window.document.title = xhttp.statusText;

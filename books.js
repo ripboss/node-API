@@ -59,10 +59,6 @@ function loadBooks(){
                 result.innerText = "Erro!";
             }
         };
-        // xhttp.onload = function() {
-        //     if (xhttp.status == 200)
-        //         console.log("concluído");
-        // };
         xhttp.responseType = "json";
         xhttp.send(data);
         ev.preventDefault();
