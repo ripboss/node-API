@@ -1,18 +1,32 @@
 var id;
 var body;
 var isNew = false;
+
 function loadForm(){
-    var input = window.document.getElementById("title");
+    var input = window.document.getElementById("newtitle");
     input.value = body[0].title;
-    input = window.document.getElementById("author");
+    input = window.document.getElementById("newauthor");
     input.value = body[0].author;
-    input = window.document.getElementById("cover");
+    input = window.document.getElementById("newcover");
     input.src = `files/${id}`;
-    input = window.document.getElementById("myfile");
+    //input = window.document.getElementById("newfile");
     var div = window.document.getElementById('book');
     div.hidden = true;
     div = window.document.getElementById('edit');
     div.hidden = false;
+}
+
+function cancelForm() {
+    let div = window.document.getElementById('edit');
+    div.hidden = true;
+    div = window.document.getElementById('book');
+    div.hidden = false;
+}
+
+
+function loadBook(){
+    var params = (new URL(document.location)).searchParams;
+    id = params.get("id");
     var form = window.document.getElementById("bookForm");
     form.addEventListener("submit", (ev) =>
     {
@@ -25,28 +39,20 @@ function loadForm(){
         xhttp.onreadystatechange = function() {
             if (xhttp.readyState == 4 && xhttp.status == 200) {
                 //console.log("livro adicionado");
-                let div = window.document.getElementById('edit');
-                div.hidden = true;
-                div = window.document.getElementById('book');
-                div.innerHTML = "";
-                div.hidden = false;
                 isNew = true;
-                loadBook();
+                //loadBook();
+                window.location.href = `book.html?id=${id}`; //redirect
             }
             else if(xhttp.readyState == 4 && xhttp.status == 400) {
                 //console.log("Erro");
                 let result = window.document.getElementById("errSpan");
                 result.innerText = "Erro!";
             }
-            //window.location.href = `book.html?id=${id}`; //redirect
         };
         xhttp.send(data);
         ev.preventDefault();
     }, false);
-}
-function loadBook(){
-    var params = (new URL(document.location)).searchParams;
-    id = params.get("id");
+
     var xhttp = new XMLHttpRequest();
     //on async request:
     xhttp.onreadystatechange = () =>
@@ -54,36 +60,27 @@ function loadBook(){
         if (xhttp.readyState == 4 && xhttp.status == 200){
             body = xhttp.response;
             window.document.title = "Book";
-            let div = window.document.getElementById('book');
-            let p1 = window.document.createElement('p');
-            p1.innerText = `Título: "${body[0].title}"`;
-            let p2 = window.document.createElement('p');
-            p2.innerText = 'Autor: ' + body[0].author;
-            div.appendChild(p1);
-            div.appendChild(p2);
-            var p3 = window.document.createElement('p');
+            let p = window.document.getElementById('title');
+            p.innerText = `Título: "${body[0].title}"`;
+            p = window.document.getElementById('author');
+            p.innerText = 'Autor: ' + body[0].author;
+            p = window.document.getElementById('genres');
             for (j=0; j<body[0].genres.length; j++){
                 let span = window.document.createElement('span');
                 span.innerText = body[0].genres[j];
-                p3.appendChild(span);
+                p.appendChild(span);
             }
             if (body[0].img) {
-                let img = window.document.createElement("img");
+                let img = window.document.getElementById('cover');
                 img.src = `files/${id}`;
-                div.appendChild(img);
+
             }
-            let p4 = window.document.createElement('p');
-            let button = window.document.createElement('button');
-            button.innerText = "edit...";
-            button.onclick= loadForm;
-            p4.appendChild(button);
-            div.appendChild(p4);
             if (isNew) {
+                let p = window.document.getElementById('bottom');
                 let result = window.document.createElement('span');
                 result.innerText = "Editado!";
-                p4.appendChild(result);
+                p.appendChild(result);
             }
-            
         }
         else if (xhttp.readyState == 4 && xhttp.status == 404) {
             window.document.title = xhttp.statusText;
