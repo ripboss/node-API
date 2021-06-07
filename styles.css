@@ -10,7 +10,7 @@ nav {
 #cover {
     background: url(files/water.webp) center;
     background-size: cover;
-    color: white;
+    color: rgb(255, 255, 255);
     height: 90%;
     text-align: center;
     display: flex;
@@ -19,4 +19,9 @@ nav {
 
 #cover-caption {
     width: 100%;
+}
+
+h1 {
+    font-family: 'Archivo Black';
+    color: lightgreen;
 }
